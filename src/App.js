@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+const Login = lazy(() => import("./components/Login"));
+const Register = lazy(() => import("./components/Register"));
+const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
+const ManagerDashBoard = lazy(() => import("./components/ManagerDashBoard"));
+const CustomerDashbooard = lazy(() => import("./components/CustomerDashboard"));
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="appStyle">
+      <Router>
+        {/* Suspense to show fallback while components load */}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Admin" element={<AdminDashboard />} />
+            <Route path="/Manager" element={<ManagerDashBoard />} />
+            <Route path="/Customer" element={<CustomerDashbooard />} />
+          </Routes>
+        </Suspense>
+      </Router>
     </div>
   );
 }

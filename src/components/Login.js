@@ -1,45 +1,35 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../App.css";
-import { Link } from "react-router-dom";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loginType, setLoginType] = useState("customer"); // Default to customer login
   const navigate = useNavigate();
 
-  // New function to handle login for different roles
-  const handleLogin = async (role) => {
-    sessionStorage.clear();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-    setError(null); // Reset error state
+    // Choose the correct URL based on the login type
+    const url =
+      loginType === "admin"
+        ? "http://localhost:5000/api/admin/login"
+        : "http://localhost:5000/api/customer/login";
 
     try {
-      let response;
-      // If role is instructor, call instructor login API
-      response = await axios.post(
-        "http://localhost:5000/api/user/login/" + role,
-        {
-          email: username, // Use username as email for instructor login
-          password,
-          role,
-        }
-      );
-      console.log(response);
+      const response = await axios.post(url, { email, password });
+      
       if (response.data.message === "Login successful") {
-        // Navigate based on the role
         sessionStorage.setItem("user", JSON.stringify(response.data.user));
-        if (response.data.role === "customer") {
-          navigate("/Customer");
-        } else if (response.data.role === "manager") {
-          navigate("/Manager");
-        } else if (response.data.role === "admin") {
-          navigate("/Admin");
-        }
+
+        // Navigate to the appropriate dashboard
+        navigate(loginType === "admin" ? "/admin" : "/customer");
       } else {
-        setError(response.data.message);
+        setError(response.data.message || "An unexpected error occurred.");
       }
     } catch (err) {
       setError("Failed to login. Please check your credentials.");
@@ -47,77 +37,67 @@ function Login() {
   };
 
   return (
-    <div>
-      <div className="bg-gradient-primary appStyle">
-        <div className="container p-1">
-          <div className="row justify-content-center">
-            <div className="col-xl-10 col-lg-12 col-md-9">
-              <div className="card o-hidden border-0 shadow-lg my-5">
-                <div className="card-body p-0">
-                  <div className="row">
-                    <div className="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                    <div className="col-lg-6">
-                      <div className="p-5">
-                        <div className="text-center">
-                          <h1 className="h4 text-gray-900 mb-4">Welcome!</h1>
-                        </div>
-
-                        <form
-                          className="user"
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            handleLogin("customer"); // Default role is student for form submission
-                          }}
-                        >
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              className="form-control form-control-user"
-                              id="exampleInputEmail"
-                              aria-describedby="emailHelp"
-                              placeholder="Enter Email Address..."
-                              onChange={(e) => setUsername(e.target.value)}
-                            ></input>
-                          </div>
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              className="form-control form-control-user"
-                              id="exampleInputPassword"
-                              placeholder="Password"
-                              onChange={(e) => setPassword(e.target.value)}
-                            ></input>
-                          </div>
-                          {error && <p style={{ color: "red" }}>{error}</p>}
-                          <button
-                            type="submit"
-                            className="btn btn-primary btn-user btn-block"
-                          >
-                            Customer Login
-                          </button>
-                          <hr></hr>
-                          <button
-                            type="button"
-                            className="btn btn-google btn-user btn-block"
-                            onClick={() => handleLogin("manger")}
-                          >
-                            Manager Login
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-facebook btn-user btn-block"
-                            onClick={() => handleLogin("admin")}
-                          >
-                            Admin Login
-                          </button>
-                        </form>
-                        <hr></hr>
-                        <div className="text-center">
-                          <Link className="small" to="/Register">
-                            Create an Account!
-                          </Link>
-                        </div>
+    <div className="bg-gradient-primary vh-100 d-flex justify-content-center align-items-center">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-lg-8 col-xl-7">
+            <div className="card o-hidden border-0 shadow-lg" style={{ maxWidth: "650px", margin: "auto" }}>
+              <div className="card-body p-0">
+                <div className="row g-0">
+                  <div className="col-5 d-none d-lg-block bg-login-image"></div>
+                  <div className="col-7 p-5">
+                    <div className="text-center mb-4">
+                      <h3 className="text-gray-900" style={{ fontSize: "12px", fontWeight: "bold" }}>
+                        Welcome Back!
+                      </h3>
+                    </div>
+                    <form onSubmit={handleLogin}>
+                      <div className="form-group mb-3">
+                        <input
+                          type="email"
+                          className="form-control"
+                          placeholder="Email Address"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          style={{ fontSize: "12px", padding: "0.5rem" }}
+                          required
+                        />
                       </div>
+                      <div className="form-group mb-3">
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="Password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          style={{ fontSize: "12px", padding: "0.5rem" }}
+                          required
+                        />
+                      </div>
+
+                      <div className="form-group mb-3">
+                        <label style={{ fontSize: "12px" }}>Login as:</label>
+                        <select
+                          className="form-control"
+                          value={loginType}
+                          onChange={(e) => setLoginType(e.target.value)}
+                          style={{ fontSize: "12px", padding: "0.5rem" }}
+                        >
+                          <option value="customer">Customer</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </div>
+
+                      {error && <p className="text-danger" style={{ fontSize: "12px" }}>{error}</p>}
+                      
+                      <button type="submit" className="btn btn-success btn-block" style={{ fontSize: "12px" }}>
+                        Login
+                      </button>
+                    </form>
+                    <div className="text-center mt-4">
+                      <a className="small" href="/register" style={{ fontSize: "12px" }}>
+                        Create Customer Account
+                      </a>
                     </div>
                   </div>
                 </div>

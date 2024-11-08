@@ -189,7 +189,7 @@ const AdminDashboardBody = () => {
                 style={{ maxWidth: "100%", fontSize: "10px" }}
               >
                 <div className="row g-0">
-                  <div className="col-md-6">
+                  <div className="col-md-4">
                     <img
                       src={movie.imageUrl}
                       alt={movie.title}
@@ -197,7 +197,7 @@ const AdminDashboardBody = () => {
                       style={{ height: "100%", objectFit: "cover" }}
                     />
                   </div>
-                  <div className="col-md-6 position-relative">
+                  <div className="col-md-8 position-relative">
                     <div className="card-body">
                       <h5 className="card-title">{movie.title}</h5>
                       <p className="card-text">

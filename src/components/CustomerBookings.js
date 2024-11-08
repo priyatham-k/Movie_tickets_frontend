@@ -100,7 +100,7 @@ const CustomerBookings = () => {
                   src={booking.movie.imageUrl}
                   alt={booking.movie.title}
                   className="card-img-top mb-2"
-                  style={{ height: "120px", objectFit: "cover", borderRadius: "5px" }}
+                  style={{ height: "120px", objectFit: "fit", borderRadius: "5px" }}
                 />
                 <div className="card-body p-0 mt-2">
                   <div className="d-flex align-items-center justify-content-between mb-1">

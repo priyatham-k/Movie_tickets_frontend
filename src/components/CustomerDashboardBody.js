@@ -171,10 +171,10 @@ const CustomerDashboardBody = () => {
           <div className="col-12 mb-3" key={movie._id}>
             <div className="card" style={{ maxWidth: '100%', fontSize: '10px' }}>
               <div className="row g-0">
-                <div className="col-md-4">
+                <div className="col-md-3">
                   <img src={movie.imageUrl} alt={movie.title} className="img-fluid rounded-start" style={{ height: '100%', objectFit: 'cover' }} />
                 </div>
-                <div className="col-md-8 position-relative">
+                <div className="col-md-9 position-relative">
                   <div className="card-body">
                     <h5 className="card-title">{movie.title}</h5>
                     <p className="card-text"><strong>Genre:</strong> {movie.genre}</p>

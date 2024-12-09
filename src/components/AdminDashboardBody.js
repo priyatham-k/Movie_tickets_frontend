@@ -42,7 +42,6 @@ const AdminDashboardBody = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value)
     setMovieData((prev) => {
       if (name === "screenNumber" && editingMovie) {
         // Update the nested screen object
@@ -103,7 +102,6 @@ const AdminDashboardBody = () => {
 
   const handleAddOrEditMovie = async () => {
     if (!validateForm()) return;
-    console.log(movieData)
    
     try {
       if (editingMovie) {
@@ -114,6 +112,7 @@ const AdminDashboardBody = () => {
         );
         toast.success("Movie updated successfully");
       } else {
+        movieData["screenNumber"] = !movieData["screenNumber"] ? 1:movieData["screenNumber"];
         await axios.post(
           "http://localhost:5000/api/movieRoutes/add",
           movieData
@@ -133,7 +132,7 @@ const AdminDashboardBody = () => {
       title: "",
       genre: "",
       duration: 70,
-      screenNumber: 1,
+      screenNumber: null,
       timeSlots: [],
       imageUrl: "",
       actors: "",

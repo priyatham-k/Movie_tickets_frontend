@@ -16,14 +16,14 @@ const CustomerBookings = () => {
   const fetchCustomerBookings = async () => {
     const userData = JSON.parse(sessionStorage.getItem("user"));
 
-    if (!userData || !userData._id) {
+    if (!userData || !userData.id) {
       toast.error("User is not logged in");
       return;
     }
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/customer/${userData._id}`
+        `http://localhost:5000/api/customer/${userData.id}`
       );
       setBookings(response.data);
     } catch (error) {
@@ -113,7 +113,7 @@ const CustomerBookings = () => {
                     </span>
                   </div>
                   <p className="card-text mb-1"><strong>Genre:</strong> {booking.movie.genre}</p>
-                  <p className="card-text mb-1"><strong>Screen:</strong> {booking.movie.screenNumber}</p>
+                  <p className="card-text mb-1"><strong>Screen:</strong> {booking.movie.screen?.screenNumber}</p>
                   <p className="card-text mb-1"><strong>Slot:</strong> {booking.timeSlot}</p>
                   <p className="card-text mb-1"><strong>Date:</strong> {new Date(booking.date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
                   <p className="card-text mb-2"><strong>Seats:</strong> {booking.seatsBooked.join(", ")}</p>

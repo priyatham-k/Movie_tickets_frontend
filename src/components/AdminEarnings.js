@@ -117,10 +117,10 @@ const AdminEarnings = () => {
                 <div className="col-md-9">
                   <div className="card-body">
                     <h5 className="card-title">{movie.title}</h5>
-                    <p className="card-text"><strong>Genre:</strong> {movie.genre}</p>
-                    <p className="card-text"><strong>Duration:</strong> {movie.duration} mins</p>
-                    <p className="card-text"><strong>Screen:</strong> {movie.screenNumber}</p>
-                    
+                    <p className="card-text" style={{ marginBottom:"5px" }}><strong>Genre:</strong> {movie.genre?.name}</p>
+                    <p className="card-text" style={{ marginBottom:"5px" }}><strong>Duration:</strong> {movie.duration} mins</p>
+                    <p className="card-text" style={{ marginBottom:"5px" }}><strong>Screen:</strong> {movie.screen?.screenNumber}</p>
+                    <p className="card-text" style={{ marginBottom:"5px" }}><strong>Capacity:</strong> {movie.screen?.capacity}</p>
                     <div className="mt-3">
                       <h6 style={{ color: '#28a745' }}>Earnings Summary</h6>
                       {getTodayAndTomorrowCST().map((date) => (

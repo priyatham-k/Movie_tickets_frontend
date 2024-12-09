@@ -11,14 +11,17 @@ const AdminDashboardBody = () => {
     title: "",
     genre: "",
     duration: 70,
-    screenNumber: 1,
+    screens: [],
     timeSlots: [],
     imageUrl: "",
+    actors: "",
+    director: "",
   });
+  const [imagePreview, setImagePreview] = useState(null);
   const [editingMovie, setEditingMovie] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const timeSlots = ["11:00am", "2:00pm", "6:00pm", "9:00pm"];
+  const timeSlots = ["11:00 am", "2:00 pm", "6:30 pm", "9:30 pm"];
   const screens = [1, 2, 3, 4];
 
   useEffect(() => {
@@ -39,14 +42,35 @@ const AdminDashboardBody = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setMovieData({ ...movieData, [name]: value });
+    console.log(name, value)
+    setMovieData((prev) => {
+      if (name === "screenNumber" && editingMovie) {
+        // Update the nested screen object
+        const selectedScreenNumber = parseInt(value, 10);
+        return {
+          ...prev,
+          screen: {
+            ...(prev.screen || {}), // Preserve existing screen properties or initialize as empty object
+            screenNumber: selectedScreenNumber,
+          },
+        };
+      }
+      // Generic handling for other fields
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
+  
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onloadend = () =>
+    reader.onloadend = () => {
       setMovieData({ ...movieData, imageUrl: reader.result });
+      setImagePreview(reader.result);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -62,39 +86,28 @@ const AdminDashboardBody = () => {
 
   const validateForm = () => {
     const errors = {};
-
-    // Basic validations for required fields
     if (!movieData.title) errors.title = "Title is required";
     if (!movieData.genre) errors.genre = "Genre is required";
+    if (!movieData.actors) errors.actors = "Actors are required";
+    if (!movieData.director) errors.director = "Director is required";
     if (movieData.duration < 70 || movieData.duration > 180)
       errors.duration = "Duration must be between 70 and 180 minutes";
     if (movieData.timeSlots.length === 0)
       errors.timeSlots = "At least one time slot must be selected";
     if (!movieData.imageUrl) errors.imageUrl = "Image is required";
-    const isScreenOccupied = movies.some(
-      (movie) =>
-      
-        movie.screenNumber == movieData.screenNumber && // Check if any movie has the same screen number
-        (!editingMovie || movie._id !== editingMovie._id) 
-        // Exclude the current movie if we're editing it
-    );
 
-    if (isScreenOccupied) {
-      errors.screenNumber = "Selected screen is occupied by another movie";
-    }
 
-    // Update the errors state with any found errors
     setErrors(errors);
-
-    // Return true if there are no validation errors
     return Object.keys(errors).length === 0;
   };
 
   const handleAddOrEditMovie = async () => {
     if (!validateForm()) return;
-
+    console.log(movieData)
+   
     try {
       if (editingMovie) {
+        movieData["screenNumber"] = parseInt(movieData["screen"]["screenNumber"])
         await axios.put(
           `http://localhost:5000/api/movieRoutes/edit/${editingMovie._id}`,
           movieData
@@ -111,8 +124,7 @@ const AdminDashboardBody = () => {
       setShowModal(false);
       resetForm();
     } catch (error) {
-      toast.error("Error saving movie");
-      console.error("Error saving movie:", error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -124,13 +136,17 @@ const AdminDashboardBody = () => {
       screenNumber: 1,
       timeSlots: [],
       imageUrl: "",
+      actors: "",
+      director: "",
     });
+    setImagePreview(null);
     setEditingMovie(null);
     setErrors({});
   };
 
   const handleEditMovie = (movie) => {
     setMovieData(movie);
+    setImagePreview(movie.imageUrl);
     setEditingMovie(movie);
     setShowModal(true);
   };
@@ -148,24 +164,24 @@ const AdminDashboardBody = () => {
 
   return (
     <div className="container mt-4" style={{ fontSize: "10px" }}>
-           <Toaster
+      <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            fontSize: '12px', // Increase font size
-            padding: '12px', // Increase padding
-            width: '250px',  // Increase width
+            fontSize: "12px",
+            padding: "12px",
+            width: "250px",
           },
           success: {
             style: {
-              background: '#4CAF50', // Success color
-              color: '#fff',
+              background: "#4CAF50",
+              color: "#fff",
             },
           },
           error: {
             style: {
-              background: '#f44336', // Error color
-              color: '#fff',
+              background: "#f44336",
+              color: "#fff",
             },
           },
         }}
@@ -200,18 +216,27 @@ const AdminDashboardBody = () => {
                   <div className="col-md-8 position-relative">
                     <div className="card-body">
                       <h5 className="card-title">{movie.title}</h5>
-                      <p className="card-text">
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
                         <strong>Genre:</strong> {movie.genre}
                       </p>
-                      <p className="card-text">
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
                         <strong>Duration:</strong> {movie.duration} mins
                       </p>
-                      <p className="card-text">
-                        <strong>Screen:</strong> {movie.screenNumber}
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                        <strong>Screen:</strong> {movie.screen?.screenNumber}
                       </p>
-                      <p className="card-text">
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                        <strong>Capacity:</strong> {movie.screen?.capacity}
+                      </p>
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
                         <strong>Time Slots:</strong>{" "}
                         {movie.timeSlots.join(", ")}
+                      </p>
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                        <strong>Actors:</strong> {movie.actors}
+                      </p>
+                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                        <strong>Director:</strong> {movie.director}
                       </p>
                     </div>
                     <div
@@ -240,7 +265,7 @@ const AdminDashboardBody = () => {
           ))}
         </div>
       ) : (
-        <p className="text-center">No movies available.</p>
+        <h4 className="text-center">No Movies Available.</h4>
       )}
 
       {showModal && (
@@ -265,103 +290,169 @@ const AdminDashboardBody = () => {
                 ></button>
               </div>
               <div className="modal-body">
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="Title"
-                  value={movieData.title}
-                  onChange={handleInputChange}
-                  className="form-control form-control-sm mb-2"
-                />
-                {errors.title && (
-                  <p className="text-danger" style={{ fontSize: "10px" }}>
-                    {errors.title}
-                  </p>
+                {imagePreview && (
+                  <div className="mb-3 text-center">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="img-fluid"
+                      style={{ maxHeight: "200px", objectFit: "cover" }}
+                    />
+                  </div>
                 )}
 
-                <input
-                  type="text"
-                  name="genre"
-                  placeholder="Genre"
-                  value={movieData.genre}
-                  onChange={handleInputChange}
-                  className="form-control form-control-sm mb-2"
-                />
-                {errors.genre && (
-                  <p className="text-danger" style={{ fontSize: "10px" }}>
-                    {errors.genre}
-                  </p>
-                )}
-
-                <input
-                  type="number"
-                  name="duration"
-                  placeholder="Duration (70-180 mins)"
-                  value={movieData.duration}
-                  onChange={handleInputChange}
-                  min="70"
-                  max="180"
-                  className="form-control form-control-sm mb-2"
-                />
-                {errors.duration && (
-                  <p className="text-danger" style={{ fontSize: "10px" }}>
-                    {errors.duration}
-                  </p>
-                )}
-
-                <select
-                  name="screenNumber"
-                  value={movieData.screenNumber}
-                  onChange={handleInputChange}
-                  className="form-select form-select-sm mb-2"
-                >
-                  {screens.map((screen) => (
-                    <option key={screen} value={screen}>
-                      Screen {screen}
-                    </option>
-                  ))}
-                </select>
-                {errors.screenNumber && (
-                  <p className="text-danger" style={{ fontSize: "10px" }}>
-                    {errors.screenNumber}
-                  </p>
-                )}
-
-                <div className="mb-2">
-                  <label style={{ fontSize: "10px" }}>Select Time Slots:</label>
-                  {timeSlots.map((slot) => (
-                    <div
-                      key={slot}
-                      className="form-check"
-                      style={{ fontSize: "10px" }}
-                    >
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        value={slot}
-                        onChange={handleTimeSlotChange}
-                        checked={movieData.timeSlots.includes(slot)}
-                      />
-                      <label className="form-check-label">{slot}</label>
-                    </div>
-                  ))}
-                  {errors.timeSlots && (
-                    <p className="text-danger" style={{ fontSize: "10px" }}>
-                      {errors.timeSlots}
-                    </p>
-                  )}
+                <div className="row">
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={movieData.title}
+                      onChange={handleInputChange}
+                      className="form-control form-control-sm"
+                    />
+                    {errors.title && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.title}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Genre</label>
+                    <input
+                      type="text"
+                      name="genre"
+                      value={movieData.genre}
+                      onChange={handleInputChange}
+                      className="form-control form-control-sm"
+                    />
+                    {errors.genre && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.genre}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Actors</label>
+                    <input
+                      type="text"
+                      name="actors"
+                      value={movieData.actors}
+                      onChange={handleInputChange}
+                      className="form-control form-control-sm"
+                    />
+                    {errors.actors && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.actors}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <input
-                  type="file"
-                  onChange={handleImageUpload}
-                  className="form-control form-control-sm mb-2"
-                />
-                {errors.imageUrl && (
-                  <p className="text-danger" style={{ fontSize: "10px" }}>
-                    {errors.imageUrl}
-                  </p>
-                )}
+                <div className="row">
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Director</label>
+                    <input
+                      type="text"
+                      name="director"
+                      value={movieData.director}
+                      onChange={handleInputChange}
+                      className="form-control form-control-sm"
+                    />
+                    {errors.director && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.director}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Duration</label>
+                    <input
+                      type="number"
+                      name="duration"
+                      value={movieData.duration}
+                      onChange={handleInputChange}
+                      className="form-control form-control-sm"
+                      min="70"
+                      max="180"
+                    />
+                    {errors.duration && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.duration}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Screen Number</label>
+                    <select
+                      name="screenNumber"
+                      value={movieData.screen?.screenNumber}
+                      onChange={handleInputChange}
+                      className="form-select form-select-sm"
+                    >
+                      {screens.map((screen) => (
+                        <option key={screen} value={screen}>
+                          Screen {screen}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.screenNumber && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.screenNumber}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-4 mb-2">
+                    <label style={{ fontSize: "12px" }}>Time Slots</label>
+                    {timeSlots.map((slot) => (
+                      <div
+                        key={slot}
+                        className="form-check"
+                        style={{ fontSize: "10px" }}
+                      >
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          value={slot}
+                          onChange={handleTimeSlotChange}
+                          checked={movieData.timeSlots.includes(slot)}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            borderColor: "green",
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          style={{ marginLeft: "10px", marginTop:"4px", fontSize: "14px"}}
+                        >
+                          {slot}
+                        </label>
+                      </div>
+                    ))}
+                    {errors.timeSlots && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.timeSlots}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-md-8 mb-2">
+                    <label style={{ fontSize: "12px" }}>Upload Image</label>
+                    <input
+                      type="file"
+                      onChange={handleImageUpload}
+                      className="form-control form-control-sm"
+                    />
+                    {errors.imageUrl && (
+                      <p className="text-danger" style={{ fontSize: "10px" }}>
+                        {errors.imageUrl}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="modal-footer">
                 <button

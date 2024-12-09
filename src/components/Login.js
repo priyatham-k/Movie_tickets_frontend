@@ -14,25 +14,34 @@ function Login() {
     e.preventDefault();
     setError(null);
 
-    // Choose the correct URL based on the login type
+    // Determine the correct login API endpoint based on login type
     const url =
       loginType === "admin"
         ? "http://localhost:5000/api/admin/login"
         : "http://localhost:5000/api/customer/login";
 
     try {
+      // Send login request
       const response = await axios.post(url, { email, password });
-      
-      if (response.data.message === "Login successful") {
-        sessionStorage.setItem("user", JSON.stringify(response.data.user));
 
-        // Navigate to the appropriate dashboard
+      // Handle success based on API response
+      if (response.status === 200) {
+        const { token, user } = response.data;
+
+        // Store token and user information in sessionStorage
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("user", JSON.stringify(user));
+
+        // Navigate to appropriate dashboard
         navigate(loginType === "admin" ? "/admin" : "/customer");
       } else {
         setError(response.data.message || "An unexpected error occurred.");
       }
     } catch (err) {
-      setError("Failed to login. Please check your credentials.");
+      // Catch errors and display appropriate messages
+      setError(
+        err.response?.data?.message || "Failed to login. Please check your credentials."
+      );
     }
   };
 
@@ -41,13 +50,19 @@ function Login() {
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-8 col-xl-7">
-            <div className="card o-hidden border-0 shadow-lg" style={{ maxWidth: "650px", margin: "auto" }}>
+            <div
+              className="card o-hidden border-0 shadow-lg"
+              style={{ maxWidth: "650px", margin: "auto" }}
+            >
               <div className="card-body p-0">
                 <div className="row g-0">
                   <div className="col-5 d-none d-lg-block bg-login-image"></div>
                   <div className="col-7 p-5">
                     <div className="text-center mb-4">
-                      <h3 className="text-gray-900" style={{ fontSize: "12px", fontWeight: "bold" }}>
+                      <h3
+                        className="text-gray-900"
+                        style={{ fontSize: "12px", fontWeight: "bold" }}
+                      >
                         Welcome Back!
                       </h3>
                     </div>
@@ -88,16 +103,30 @@ function Login() {
                         </select>
                       </div>
 
-                      {error && <p className="text-danger" style={{ fontSize: "12px" }}>{error}</p>}
-                      
-                      <button type="submit" className="btn btn-success btn-block" style={{ fontSize: "12px" }}>
+                      {error && (
+                        <p className="text-danger" style={{ fontSize: "12px" }}>
+                          {error}
+                        </p>
+                      )}
+
+                      <button
+                        type="submit"
+                        className="btn btn-success btn-block"
+                        style={{ fontSize: "12px" }}
+                      >
                         Login
                       </button>
                     </form>
                     <div className="text-center mt-4">
-                      <a className="small" href="/register" style={{ fontSize: "12px" }}>
-                        Create Customer Account
-                      </a>
+                      {loginType === "customer" && (
+                        <a
+                          className="small"
+                          href="/register"
+                          style={{ fontSize: "12px" }}
+                        >
+                          Create Customer Account
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

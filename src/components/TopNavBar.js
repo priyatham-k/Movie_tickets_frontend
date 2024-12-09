@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import "../App.css";
 
 const TopNavBar = () => {
-  const [username, setUsername] = useState("");
+  const [userFullName, setUserFullName] = useState("");
+  const [role, setRole] = useState("Customer"); // Default role is "Customer"
 
   useEffect(() => {
+    // Retrieve user data from sessionStorage
     const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData && userData.email) {
-      const emailUsername = userData.email.split("@")[0];
-      setUsername(emailUsername);
+    if (userData && userData.firstName && userData.lastName) {
+      // Set the user's full name
+      setUserFullName(`${userData.firstName} ${userData.lastName}`);
+    }
+    // Role can be dynamically set if provided in the session data
+    if (userData?.role) {
+      setRole(userData.role);
     }
   }, []);
 
@@ -20,12 +26,21 @@ const TopNavBar = () => {
 
       <ul className="navbar-nav ml-auto">
         <div className="topbar-divider d-none d-sm-block"></div>
-        
+
         <li className="nav-item dropdown no-arrow">
-          <a className="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span className="mr-2 d-none d-lg-inline text-gray-600 small">{username}</span>
-            <div className="img-profile rounded-circle" style={{ width: "32px", height: "32px", display: "inline-block" }}>
-              {/* Colorful Profile SVG Icon */}
+          <a
+            className="nav-link dropdown-toggle"
+            id="userDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            {/* Profile Icon */}
+            <div
+              className="img-profile rounded-circle mr-2"
+              style={{ width: "40px", height: "40px", display: "inline-block" }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -35,7 +50,7 @@ const TopNavBar = () => {
                 <circle cx="12" cy="12" r="10" fill="#4e73df" /> {/* Blue background */}
                 <path
                   d="M12 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"
-                  fill="#f6c23e"  // Yellow head
+                  fill="#f6c23e" // Yellow head
                 />
                 <path
                   d="M16 16c0-2.21-1.79-4-4-4s-4 1.79-4 4v1h8v-1z"
@@ -43,6 +58,13 @@ const TopNavBar = () => {
                 />
               </svg>
             </div>
+
+            {/* User Info */}
+            <span className="d-inline-block text-gray-600 small">
+              <strong>{userFullName || "Admin User"}</strong>
+              <br />
+              Role: {role}
+            </span>
           </a>
         </li>
       </ul>

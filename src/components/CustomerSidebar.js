@@ -115,10 +115,10 @@ const CustomerSidebar = ({ activeSection, setActiveSection }) => {
         <li className="nav-item">
           <a
             className="nav-link"
-            onClick={() => setShowModal(true)} // Open modal on click
+            onClick={() => setShowModal(true)} 
             style={{ cursor: "pointer" }}
           >
-            <i className="fas fa-fw fa-key"></i> {/* Key icon */}
+            <i className="fas fa-fw fa-key"></i> 
             <span>Change Password</span>
           </a>
         </li>

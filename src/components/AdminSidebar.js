@@ -3,7 +3,10 @@ import "../App.css";
 
 const AdminSidebar = ({ activeSection, setActiveSection }) => {
   return (
-    <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul
+      className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+      id="accordionSidebar"
+    >
       {/* Brand Section */}
       <a className="sidebar-brand d-flex align-items-center justify-content-center">
         <div className="sidebar-brand-icon">
@@ -15,7 +18,9 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       <hr className="sidebar-divider my-0" />
 
       {/* Dashboard Section */}
-      <li className={`nav-item ${activeSection === "dashboard" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${activeSection === "dashboard" ? "active" : ""}`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("dashboard")}
@@ -32,7 +37,9 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       <div className="sidebar-heading">Menu</div>
 
       {/* Bookings Section */}
-      <li className={`nav-item ${activeSection === "bookings" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${activeSection === "bookings" ? "active" : ""}`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("bookings")}
@@ -44,7 +51,9 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       </li>
 
       {/* Schedule Section */}
-      <li className={`nav-item ${activeSection === "schedule" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${activeSection === "schedule" ? "active" : ""}`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("schedule")}
@@ -56,7 +65,11 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       </li>
 
       {/* Seat Bookings Section */}
-      <li className={`nav-item ${activeSection === "seatbookings" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${
+          activeSection === "seatbookings" ? "active" : ""
+        }`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("seatbookings")}
@@ -64,6 +77,20 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
         >
           <i className="fas fa-chair"></i>
           <span>Seat Bookings</span>
+        </a>
+      </li>
+      <li
+        className={`nav-item ${
+          activeSection === "ticketChecking" ? "active" : ""
+        }`}
+      >
+        <a
+          className="nav-link"
+          onClick={() => setActiveSection("ticketChecking")}
+          style={{ cursor: "pointer" }}
+        >
+          <i className="fas fa-fw fa-ticket-alt"></i>
+          <span>Ticket Checking</span>
         </a>
       </li>
 
@@ -80,7 +107,9 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       </li>
 
       {/* Earnings Section */}
-      <li className={`nav-item ${activeSection === "earnings" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${activeSection === "earnings" ? "active" : ""}`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("earnings")}
@@ -92,7 +121,9 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
       </li>
 
       {/* Payments Section */}
-      <li className={`nav-item ${activeSection === "payments" ? "active" : ""}`}>
+      <li
+        className={`nav-item ${activeSection === "payments" ? "active" : ""}`}
+      >
         <a
           className="nav-link"
           onClick={() => setActiveSection("payments")}

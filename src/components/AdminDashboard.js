@@ -10,7 +10,7 @@ import AdminScreen from "./AdminScreen";
 import AdminSchedule from "./AdminSchedule";
 import AdminSeatBookings from "./AdminSeatBookings"; // Import the new component
 import "../App.css";
-
+import AdminTicketChecking from "./AdminTicketChecking";
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
 
@@ -27,7 +27,8 @@ const AdminDashboard = () => {
             {activeSection === "dashboard" && <AdminDashboardBody />}
             {activeSection === "bookings" && <AdminBookings />}
             {activeSection === "schedule" && <AdminSchedule />}
-            {activeSection === "seatbookings" && <AdminSeatBookings />} {/* Add seat bookings */}
+            {activeSection === "seatbookings" && <AdminSeatBookings />}
+            {activeSection === "ticketChecking" && <AdminTicketChecking />} {/* Add seat bookings */}
             {activeSection === "earnings" && <AdminEarnings />}
             {activeSection === "screens" && <AdminScreen />}
             {activeSection === "payments" && <AdminPayments />}

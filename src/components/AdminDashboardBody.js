@@ -160,7 +160,6 @@ const AdminDashboardBody = () => {
       console.error("Error deleting movie:", error);
     }
   };
-
   return (
     <div className="container mt-4" style={{ fontSize: "10px" }}>
       <Toaster
@@ -215,26 +214,26 @@ const AdminDashboardBody = () => {
                   <div className="col-md-8 position-relative">
                     <div className="card-body">
                       <h5 className="card-title">{movie.title}</h5>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Genre:</strong> {movie.genre}
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Duration:</strong> {movie.duration} mins
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Screen:</strong> {movie.screen?.screenNumber}
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Capacity:</strong> {movie.screen?.capacity}
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Time Slots:</strong>{" "}
                         {movie.timeSlots.join(", ")}
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Actors:</strong> {movie.actors}
                       </p>
-                      <p className="card-text" style={{ marginBottom:"5px" }}>
+                      <p className="card-text" style={{ marginBottom: "5px" }}>
                         <strong>Director:</strong> {movie.director}
                       </p>
                     </div>
@@ -267,7 +266,7 @@ const AdminDashboardBody = () => {
         <h4 className="text-center">No Movies Available.</h4>
       )}
 
-      {showModal && (
+{showModal && (
         <div
           className="modal d-block"
           tabIndex="-1"

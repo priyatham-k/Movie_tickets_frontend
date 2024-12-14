@@ -43,6 +43,30 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
         </a>
       </li>
 
+      {/* Schedule Section */}
+      <li className={`nav-item ${activeSection === "schedule" ? "active" : ""}`}>
+        <a
+          className="nav-link"
+          onClick={() => setActiveSection("schedule")}
+          style={{ cursor: "pointer" }}
+        >
+          <i className="fas fa-calendar-alt"></i>
+          <span>Schedule</span>
+        </a>
+      </li>
+
+      {/* Seat Bookings Section */}
+      <li className={`nav-item ${activeSection === "seatbookings" ? "active" : ""}`}>
+        <a
+          className="nav-link"
+          onClick={() => setActiveSection("seatbookings")}
+          style={{ cursor: "pointer" }}
+        >
+          <i className="fas fa-chair"></i>
+          <span>Seat Bookings</span>
+        </a>
+      </li>
+
       {/* Screens Section */}
       <li className={`nav-item ${activeSection === "screens" ? "active" : ""}`}>
         <a

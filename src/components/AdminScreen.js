@@ -37,12 +37,12 @@ const AdminScreen = () => {
       setIsEditing(false);
     } catch (error) {
       console.error("Error fetching screen details:", error);
-      toast.error("Failed to fetch screen details");
+      //toast.error("Failed to fetch screen details");
     }
   };
 
   const handleEditCapacity = async () => {
-    if (!capacity || capacity < 25 || capacity > 80) {
+    if (!capacity || capacity < 25 || capacity > 250) {
       toast.error("Capacity must be between 25 and 80");
       const response = await axios.get(
         `http://localhost:5000/api/screenRoutes/${selectedScreen.screen.id}/movies`
